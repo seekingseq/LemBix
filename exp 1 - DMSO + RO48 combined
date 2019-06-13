@@ -80,5 +80,5 @@ dmso <- FindClusters(dmso,resolution = 0.6, dims.use = 1:10)
 
 dmso@meta.data$k.means.clusters <- kmeans
 
-# Plot UMAP, and colour cells by k-means identity
+# Plot UMAP, and color cells by k-means identity
 RunUMAP(object = object, group.by = "k.means.clusters")
