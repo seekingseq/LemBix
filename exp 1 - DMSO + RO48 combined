@@ -66,5 +66,19 @@ DimPlot(immune.combined, label = TRUE)
 
 
 # step 4 clustering excitatory neurons 
-seurat@dr$pca=matrix@pca.load
-dmso.data <- FindClusters(object = matrix, reduction.type = "pca", dims.use = 1:8, resolution = 1.0, print.output = 0, save.SNN = TRUE)
+dmso <- CreateSeuratObject(dmso.data, project = "dmso")
+dmso <- subset(dmso, subset.names = c("nGene", "excitatory"), low.thresholds = c(500, -Inf), high.thresholds = c(Inf, 0.15))
+
+dmso <- NormalizeData(dmso)
+dmso <- FindVariableFeatures(dmso.data = F, display.progress = F)
+
+## always scale z score for PCA
+dmso<- ScaleData(object = dmso, vars.to.regress = c("nUMI", "percent.mito"))
+
+# graph based clustering
+dmso <- FindClusters(dmso,resolution = 0.6, dims.use = 1:10)
+
+dmso@meta.data$k.means.clusters <- kmeans
+
+# Plot UMAP, and colour cells by k-means identity
+RunUMAP(object = object, group.by = "k.means.clusters")
