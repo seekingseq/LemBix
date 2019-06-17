@@ -1,6 +1,11 @@
 library(Seurat)
-EXP <- Read10X(data.dir = "C:/Users/JBH141/Documents/Seurat/hg19/EXP/dmso/")
-EXP <- Read10X(data.dir = "C:/Users/JBH141/Documents/Seurat/hg19/EXP/ro48/")
+EXP1 <- Read10X(data.dir = "C:/Users/JBH141/Documents/Seurat/hg19/EXP/dmso/")
+EXP2 <- Read10X(data.dir = "C:/Users/JBH141/Documents/Seurat/hg19/EXP/ro48/")
+
+subset(EXP, subset.names = c("nGene", "excitatory"), low.thresholds = c(500, -Inf), high.thresholds = c(Inf, 0.15))
+merge(x = EXP1, y = EXP2)
+
+
 
 subset_EXP <- subset(x = EXP, subset = EXP > low & EXP < high)
 
@@ -11,7 +16,7 @@ merged_object = merge(x=EXP1, y=EXP2)
 # pretend that cells were originally assigned to one of two replicates (we assign randomly here)
 # if your cells do belong to multiple replicates, and you want to add this info to the Seurat
 # object create a data frame with this information (similar to replicate.info below)
-set.seed(42)
+set.seed(5)
 EXP$replicate <- sample(c("dmso", "ro48"), size = ncol(EXP), replace = TRUE)
 EXP <- AddMetaData(object = EXP, metadata = replicate.info)
 
